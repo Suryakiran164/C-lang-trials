@@ -1,6 +1,8 @@
 /* printf implementation */
 #include <unistd.h>
+#include <x86args.h>
 
+#define putchar(x)     write(1, chardup(x), 1)
 
 char *chardup(const char s)
 {
@@ -34,9 +36,28 @@ int puts(const char *str)
         return write(1, str, n);
 }
 
+int printf(const char *fmt, ...)
+{
+        unsigned int *p;
+        Args(p);
+
+        puts((unsigned char *)*p);
+        p += 4;
+        puts((unsigned char *)*p);
+
+        return;
+}
+
+
+
+
+
+
+
+
 int main()
 {
-        puts("hello  world\n");
+        printf("%s\n", "SK 1\n");
 
         return 0;
 }
