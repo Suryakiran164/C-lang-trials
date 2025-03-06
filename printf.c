@@ -3,6 +3,10 @@
 #include <x86args.h>
 
 #define putchar(x)     write(1, chardup(x), 1)
+#define Wait4char      1 // 00 01
+#define Wait4fmt       2 // 00 01
+
+typedef unsigned char State;
 
 char *chardup(const char s)
 {
@@ -33,19 +37,39 @@ int puts(const char *str)
         n = strlen(str);
         if(n < 1) return -1;
 
-        return write(1, str, n);
+        return write(1, str, n);        //write(file_stream_code, pointer_to_string_to_write, length_of_string);
 }
 
 int printf(const char *fmt, ...)
 {
         unsigned int *p;
+        unsigned char c;
+        State s;
+        const chat *f;
+
         Args(p);
+        s = Wait4char;
+        f = fmt;
 
-        puts((unsigned char *)*p);
-        p += 4;
-        puts((unsigned char *)*p);
+        while(*f)
+                if( s & Wait4char)
+                        switch(*f)
+                        {
+                                case '%':
+                                        s = Wait4fmt;
+                                        break;
 
-        return;
+                                default:
+                                        putchar(*f);
+
+                        }
+                else if(s & Wait4fmt)
+                        switch(*f)
+                        {
+
+                        }
+
+        return 0;
 }
 
 
