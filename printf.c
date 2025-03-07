@@ -58,12 +58,6 @@ int printf2(const char *fmt, ...)
                                         s = Wait4fmt;
                                         break;
 
-                                case 10:
-                                case 13:
-                                        if ((*(f+1) == 10) || (*(f+1) == 13)) f++;
-                                        putchar2(10);
-                                        break;
-
                                 default:
                                         putchar2(*f);
 
