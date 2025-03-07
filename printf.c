@@ -44,14 +44,15 @@ int printf2(const char *fmt, ...)
 {
         unsigned int *p;
         State s;
-        const chat *f;
+        const char *f;
 
         Args(p);
+        p++;
         s = Wait4char;
         f = fmt;
 
         do
-                if( s & Wait4char)
+                if(s & Wait4char)
                         switch(*f)
                         {
                                 case '%':
@@ -62,6 +63,7 @@ int printf2(const char *fmt, ...)
                                         putchar2(*f);
 
                         }
+
                 else if(s & Wait4fmt)
                         switch(*f)
                         {
@@ -70,8 +72,15 @@ int printf2(const char *fmt, ...)
                                         s = Wait4cahr;
                                         break;
 
+                                case 's':
+                                        puts2((unsigned char *)*p);
+                                        p++;
+                                        s = Wait4char;
+                                        break;
+
                                 default:
                                         s = Wait4char;
+                                        p++;
                                         break;
                         }
         while (*(f++));
@@ -79,16 +88,12 @@ int printf2(const char *fmt, ...)
         return 0;
 }
 
-
-
-
-
-
-
-
 int main()
 {
-        printf2("Hello world\n");
+        char *p;
+
+        p = "SK";
+        printf2("Hello %s, welcome\n", p);
 
         return 0;
 }
