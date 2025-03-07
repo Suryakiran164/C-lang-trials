@@ -69,11 +69,17 @@ int printf2(const char *fmt, ...)
                         {
                                 case '%':
                                         putchar2(*f);
-                                        s = Wait4cahr;
+                                        s = Wait4char;
                                         break;
 
                                 case 's':
                                         puts2((unsigned char *)*p);
+                                        p++;
+                                        s = Wait4char;
+                                        break;
+
+                                case 'c':
+                                        putchar2((unsigned char)*p);
                                         p++;
                                         s = Wait4char;
                                         break;
@@ -88,12 +94,33 @@ int printf2(const char *fmt, ...)
         return 0;
 }
 
+char *itoa(int n)
+{
+        unsigned int x, y;
+        unsigned char xs[10];
+        unsigned int *p;
+
+        y = n;
+
+        while(y > 9)
+        {
+                x = y;
+                y = x /10;
+                *xs++ = x % 10;
+
+        }
+        *xs = y;
+
+        printf
+}
+
 int main()
 {
         char *p;
 
         p = "SK";
-        printf2("Hello %s, welcome\n", p);
+        x = 'S';
+        printf2("Hello %s, welcome. testing %c\n", p, x);
 
         return 0;
 }
