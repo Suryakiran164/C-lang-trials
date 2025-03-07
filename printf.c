@@ -1,14 +1,14 @@
-/* printf implementation */
+/* printf2 implementation */
 #include <unistd.h>
 #include <x86args.h>
 
-#define putchar(x)     write(1, chardup(x), 1)
+#define putchar2(x)     write(1, chardup2(x), 1)
 #define Wait4char      1 // 00 01
 #define Wait4fmt       2 // 00 01
 
 typedef unsigned char State;
 
-char *chardup(const char s)
+char *chardup2(const char s)
 {
         static char buf[2];
         char *p;
@@ -20,7 +20,7 @@ char *chardup(const char s)
         return buf;
 }
 
-unsigned int strlen(const char *str)
+unsigned int strlen2(const char *str)
 {
         unsigned int n;
         const char *p;
@@ -30,20 +30,19 @@ unsigned int strlen(const char *str)
         return n;
 }
 
-int puts(const char *str)
+int puts2(const char *str)
 {
         unsigned int n;
 
-        n = strlen(str);
+        n = strlen2(str);
         if(n < 1) return -1;
 
         return write(1, str, n);        //write(file_stream_code, pointer_to_string_to_write, length_of_string);
 }
 
-int printf(const char *fmt, ...)
+int printf2(const char *fmt, ...)
 {
         unsigned int *p;
-        unsigned char c;
         State s;
         const chat *f;
 
@@ -51,7 +50,7 @@ int printf(const char *fmt, ...)
         s = Wait4char;
         f = fmt;
 
-        while(*f)
+        do
                 if( s & Wait4char)
                         switch(*f)
                         {
@@ -59,15 +58,29 @@ int printf(const char *fmt, ...)
                                         s = Wait4fmt;
                                         break;
 
+                                case 10:
+                                case 13:
+                                        if ((*(f+1) == 10) || (*(f+1) == 13)) f++;
+                                        putchar2(10);
+                                        break;
+
                                 default:
-                                        putchar(*f);
+                                        putchar2(*f);
 
                         }
                 else if(s & Wait4fmt)
                         switch(*f)
                         {
+                                case '%':
+                                        putchar2(*f);
+                                        s = Wait4cahr;
+                                        break;
 
+                                default:
+                                        s = Wait4char;
+                                        break;
                         }
+        while (*(f++));
 
         return 0;
 }
@@ -81,7 +94,7 @@ int printf(const char *fmt, ...)
 
 int main()
 {
-        printf("%s\n", "SK 1\n");
+        printf2("Hello world\n");
 
         return 0;
 }
