@@ -1,12 +1,28 @@
-/* printf2 implementation */
+/****************************************************************/
+/* @Suryakiran164 - 08/03/2025                                  */
+/* implementing my own printf function with mininmal options    */
+/* Trying not to use any standard C header like stdio or stdlib */
+/****************************************************************/
+
 #include <unistd.h>
+#include <stdlib.h>
 #include <x86args.h>
 
 #define putchar2(x)     write(1, chardup2(x), 1)
+#define swapchar(x)     (x+0x30)
+
 #define Wait4char      1 // 00 01
 #define Wait4fmt       2 // 00 01
 
 typedef unsigned char State;
+
+char *chardup2(const char);
+unsigned int strlen2(const char *str);
+int puts2(const char *str);
+int printf2(const char *fmt, ...);
+char *itoa2(int n);
+int main(void);
+
 
 char *chardup2(const char s)
 {
@@ -78,6 +94,12 @@ int printf2(const char *fmt, ...)
                                         s = Wait4char;
                                         break;
 
+                                case 'd':
+                                        puts2(itoa2((int)*p));
+                                        p++;
+                                        s = Wait4char;
+                                        break;
+
                                 case 'c':
                                         putchar2((unsigned char)*p);
                                         p++;
@@ -94,13 +116,15 @@ int printf2(const char *fmt, ...)
         return 0;
 }
 
-char *itoa(int n)
+char * itoa2(int n)
 {
         unsigned int x, y;
-        unsigned char xs[10];
-        unsigned int *p;
+        unsigned char *xs, *p;
+        static char ret[10];
 
         y = n;
+        xs = malloc(10);
+        p = xs;
 
         while(y > 9)
         {
@@ -111,16 +135,23 @@ char *itoa(int n)
         }
         *xs = y;
 
-        printf
+        for (x = 0; xs > p; x++, xs--)
+                ret[x] = swapchar(*xs);
+        ret[x] = swapchar(*xs);
+
+        ret[++x] = 0;
+
+        free(p);
+
+        return ret;
 }
 
 int main()
 {
-        char *p;
+        int x;
 
-        p = "SK";
-        x = 'S';
-        printf2("Hello %s, welcome. testing %c\n", p, x);
+        x = 5090;
+        printf2("Interger display: %d\n", x);
 
         return 0;
 }
